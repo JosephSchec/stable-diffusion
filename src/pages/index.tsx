@@ -4,9 +4,12 @@ interface Body {
 	prompt: string;
 }
 async function getImg(body: Body) {
-	const img = await fetch(`http://localhost:3000/api/stable-diffusion/${body.prompt}`, {
+	const img = await fetch(`/api/stable-diffusion/${body.prompt}`, {
 		cache: 'no-store',
 	});
+	if(!img.ok){
+		throw new Error("Issue getting image")
+	}
 	return await img.text();
 }
 export default function Home() {
