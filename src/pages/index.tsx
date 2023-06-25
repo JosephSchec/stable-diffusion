@@ -7,8 +7,8 @@ async function getImg(body: Body) {
 	const img = await fetch(`/api/stable-diffusion/${body.prompt}`, {
 		cache: 'no-store',
 	});
-	if(!img.ok){
-		throw new Error("Issue getting image")
+	if (!img.ok) {
+		throw new Error('Issue getting image', await img.json());
 	}
 	return await img.text();
 }
