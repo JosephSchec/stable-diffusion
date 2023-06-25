@@ -41,11 +41,11 @@ export default function Home() {
 
 			{img.trim() !== '' && !loading ? (
 				<Image src={img} alt="img" height={512} width={512} className="rounded shadow-lg" />
-			) : (
+			) : loading ? (
 				<div className="animate-pulse">
 					<div className=" w-[512px] h-[512px] bg-gray-300 rounded sm:w-96 dark:bg-gray-700"></div>
 				</div>
-			)}
+			) : null}
 		</div>
 	);
 }
