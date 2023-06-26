@@ -1,8 +1,11 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { HfInference } from '@huggingface/inference';
 import type { NextApiRequest, NextApiResponse } from 'next'; 
-
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+import { NextRequest } from 'next/server';
+export const config = {
+  runtime: 'edge',
+}
+export default async function handler(req: NextRequest, res: NextApiResponse) {
 	const TOKEN = process.env.HUGFACE_TOKEN;
 	const hf = new HfInference(TOKEN, {
 		wait_for_model: true,
@@ -10,8 +13,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		retry_on_error: false,
 		use_gpu: true,
 	});
-
-	const { prompt } = req.query;
+//https://nextjs.org/docs/pages/building-your-application/routing/api-routes#dynamic-api-routes
+	//const { prompt } = req.query;
+  const { searchParams } = new URL(req.url)
+  const prompt=searchParams.get("prompt")
 
 	if (typeof prompt ===  'string') {
 		const img = await hf.textToImage({
@@ -26,8 +31,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		const base64data = Buffer.from(result).toString('base64');
 
 		const base64 = `data:${type};base64,` + base64data;
-		return res.status(200).send(base64);
+		return new Response(base64);
 	}
 		return res.status(200)
-}
-
+} 
